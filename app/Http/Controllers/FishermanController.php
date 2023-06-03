@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Fisherman;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class FishermanController extends Controller
 {
@@ -101,19 +102,76 @@ class FishermanController extends Controller
         ]);
     }
 
+    public function count(){
+        $total = Fisherman::all()->count();
+        return response()->json([
+            'status' => 'success',
+            'total data' => $total
+        ]);
+    }
+
+    public function getALLDataFishermanByFishermanTim(Request $request){
+        $validator = Validator::make($request->all(), [
+            'tim_id' => 'required|integer'
+        ]);
+         // Ambil location_id dari inputan
+         if ($validator->fails()) {
+            return response()->json([
+                'status' => 'error',
+                'message' => $validator->errors(),
+            ], 400);
+        }
+
+        $tim_id = $request->input('tim_id');
+
+        // Query untuk mendapatkan tim nelayan berdasarkan location_id
+        $dataNelayan = Fisherman::where('tim_id', $tim_id)->get();
+    
+        // Mengecek apakah terdapat tim nelayan yang ditemukan
+        if ($dataNelayan->isEmpty()) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Tidak ada tim nelayan yang ditemukan untuk tim id ' . $tim_id,
+            ]);
+        }
+    
+        return response()->json([
+            'status' => 'success',
+            'data' => $dataNelayan
+        ]);
+    }
+
+
+    public function getTotalActiveFishermanByStatus() {
+        // Query untuk mendapatkan tim nelayan berdasarkan location_id
+        $dataNelayan = Fisherman::where('status', 'aktif')->get();
+        $total = $dataNelayan->count();
+        return response()->json([
+            'status' => 'success',
+            'total active fisherman' => $total
+        ]);
+    }
     /**
      * Remove the specified resource from storage.
      *
      * @param  \App\Models\Fisherman  $fisherman
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Fisherman $fisherman)
+    public function destroy($id)
     {
+        $fisherman = Fisherman::find($id);
+        if (!$fisherman) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Data not found'
+            ], 404);
+        }
+
         $fisherman->delete();
 
         return response()->json([
             'status' => 'success',
-            'message' => 'Fisherman deleted successfully'
+            'message' => 'Data deleted successfully'
         ]);
     }
 }

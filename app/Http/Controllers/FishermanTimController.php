@@ -34,16 +34,13 @@ class FishermanTimController extends Controller
         ]);
     }
 
-    // public function getFishermanTimByProvince(Request $request)
-    // {
-    //     $locationId = $request->input('location_id');
-    //     $data = FishermanTim::where('location_id', $locationId)->get();
-    
-    //     return response()->json([
-    //         'status' => 'success',
-    //         'data' => $data
-    //     ]); 
-    // }
+    public function count(){
+        $total = FishermanTim::all()->count();
+        return response()->json([
+            'status' => 'success',
+            'total data' => $total
+        ]);
+    }
 
     public function getFishermanTimByProvince(Request $request)
     {

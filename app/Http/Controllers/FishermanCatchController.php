@@ -49,6 +49,13 @@ class FishermanCatchController extends Controller
         ], 201);
     }
      
+    public function count(){
+        $total = FishermanCatch::all()->count();
+        return response()->json([
+            'status' => 'success',
+            'total data' => $total
+        ]);
+    }
 
     // Mengubah data
     public function update(Request $request, $id)

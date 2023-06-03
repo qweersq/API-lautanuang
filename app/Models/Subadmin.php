@@ -2,14 +2,13 @@
 
 namespace App\Models;
 
-use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Foundation\Auth\User as Authenticable;
 use Illuminate\Notifications\Notifiable;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 
-class Investors extends Authenticatable implements JWTSubject
+class Subadmin extends Authenticable implements JWTsubject 
 {
     use Notifiable;
-
     /**
      * The attributes that are mass assignable.
      * 
@@ -17,34 +16,18 @@ class Investors extends Authenticatable implements JWTSubject
      */
     protected $fillable = [
         'name',
-        'phone',
         'email',
         'password',
-        'gender',
-        'address',
-        'birth_date',
-        'location_id',
-        'nik',
-        'npwp',
-        'identity_photo',
-        'bank_id',
-        'register_date',
-        'balance',
     ];
-    // protected $table = 'investors';
-    
-    // protected $guarded = [];
-
     /**
      * That attributes that should be hidden for arrays.
      * 
      * @var array
      */
     protected $hidden = [
-        'password', 
+        'password',
         'remember_token',
     ];
-
     /** 
      * The attributes that should be cast to native types
      * 
@@ -52,9 +35,7 @@ class Investors extends Authenticatable implements JWTSubject
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
-        'balance' => 'integer',
     ];
-
     /**
      * Get the identifier that will be stored in the subject claim of the JWT.
      * 
@@ -71,26 +52,4 @@ class Investors extends Authenticatable implements JWTSubject
     public function getJWTCustomClaims() {
         return['role' => 'subadmin'];
     }
-
-    public function tim()
-    {
-        return $this->belongsTo(FishermanTim::class);
-    }
-
-    public function location()
-    {
-        return $this->belongsTo(Location::class);
-    }
-
-    // JWTSubject implementation
-    // public function getJWTIdentifier()
-    // {
-    //     return $this->getKey();
-    // }
-
-    // // JWTSubject implementation
-    // public function getJWTCustomClaims()
-    // {
-    //     return [];
-    // }
 }
