@@ -1,24 +1,27 @@
 <?php
 
-use App\Http\Controllers\AnimalTypeController;
-use App\Http\Controllers\AssetsDetailController;
-use App\Http\Controllers\OperationalCostController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Models\Fisherman;
 use App\Http\Controllers\AuthController;
-use App\Http\Controllers\BankAccountController;
 use App\Http\Controllers\BankController;
-use App\Http\Controllers\FishermanController;
-use App\Http\Controllers\FishermanTimController;
-use App\Http\Controllers\FishermanCatchController;
+use App\Http\Controllers\AdminController;
 use App\Http\Controllers\LocationController;
-use App\Http\Controllers\PostalCodeController;
+use App\Http\Controllers\SubAdminController;
+use App\Http\Controllers\FishermanController;
 use App\Http\Controllers\InvestorsController;
 use App\Http\Controllers\TypeAssetController;
-use App\Http\Controllers\CategoryOperationalCostController;
+use App\Http\Controllers\AnimalTypeController;
+use App\Http\Controllers\PostalCodeController;
+use App\Http\Controllers\BankAccountController;
+use App\Http\Controllers\AssetsDetailController;
+use App\Http\Controllers\FishermanTimController;
+use App\Http\Controllers\PaymentMethodController;
+use App\Http\Controllers\FishermanCatchController;
+use App\Http\Controllers\OperationalCostController;
 use App\Http\Controllers\FishermanCatchDetailController;
 use App\Http\Controllers\OperationalCostDetailController;
-use App\Http\Controllers\PaymentMethodController;
+use App\Http\Controllers\CategoryOperationalCostController;
 
 /*
 |--------------------------------------------------------------------------
@@ -49,16 +52,69 @@ Route::group([
 });
 
 // Investor route login register
+// Route::group([
+//     'middleware' => ['api'],
+//     'prefix' => 'investor'
+
+// ], function ($router) {
+//     Route::post('register', [InvestorsController::class, 'register']);
+//     Route::post('login', [InvestorsController::class, 'login']);
+//     Route::post('logout', [InvestorsController::class, 'logout']);
+//     Route::get('total', [InvestorsController::class, 'count']);
+//     Route::post('refresh', [InvestorsController::class, 'refresh']);
+//     Route::post('me', [InvestorsController::class, 'me']);
+// });
 Route::group([
-    'middleware' => ['api'],
     'prefix' => 'investor'
 
-], function ($router) {
-    Route::post('register', [InvestorsController::class, 'register']);
-    Route::post('login', [InvestorsController::class, 'login']);
-    Route::post('logout', [InvestorsController::class, 'logout']);
-    Route::post('refresh', [InvestorsController::class, 'refresh']);
-    Route::post('me', [InvestorsController::class, 'me']);
+], function($router){
+    Route::post('/login', [InvestorsController::class, 'login']);
+    Route::post('/register', [InvestorsController::class, 'register']);
+});
+
+Route::group([
+    'middleware' => ['jwt.role:subadmin', 'jwt.auth'],
+    'prefix' => 'investor'
+
+], function($router){
+    Route::post('/logout', [InvestorsController::class, 'logout']);
+    Route::get('/user-profile', [InvestorsController::class, 'userProfile']);
+});
+
+// baru admin
+Route::group([
+    'prefix' => 'admin'
+
+], function($router){
+    Route::post('/login', [AdminController::class, 'login']);
+    Route::post('/register', [AdminController::class, 'register']);
+});
+
+Route::group([
+    'middleware' => ['jwt.role:admin', 'jwt.auth'],
+    'prefix' => 'admin'
+
+], function($router){
+    Route::post('/logout', [AdminController::class, 'logout']);
+    Route::get('/user-profile', [AdminController::class, 'userProfile']);
+});
+
+// baru subadmin
+Route::group([
+    'prefix' => 'subadmin'
+
+], function($router){
+    Route::post('/login', [SubAdminController::class, 'login']);
+    Route::post('/register', [SubAdminController::class, 'register']);
+});
+
+Route::group([
+    'middleware' => ['jwt.role:subadmin', 'jwt.auth'],
+    'prefix' => 'subadmin'
+
+], function($router){
+    Route::post('/logout', [SubAdminController::class, 'logout']);
+    Route::get('/user-profile', [SubAdminController::class, 'userProfile']);
 });
 
 Route::group([
@@ -67,6 +123,9 @@ Route::group([
 ], function ($router) {
     Route::get('fisherman', [FishermanController::class, 'index']);
     Route::post('fisherman', [FishermanController::class, 'store']);
+    Route::get('fisherman/count', [FishermanController::class, 'count']);
+    Route::get('fisherman/tim-id', [FishermanController::class, 'getALLDataFishermanByFishermanTim']);
+    Route::get('fisherman/status-aktif', [FishermanController::class, 'getTotalActiveFishermanByStatus']);
     Route::get('fisherman/{id}', [FishermanController::class, 'show']);
     Route::put('fisherman/{id}', [FishermanController::class, 'update']);
     Route::delete('fisherman/{id}', [FishermanController::class, 'destroy']);
@@ -80,6 +139,7 @@ Route::group([
     Route::get('fisherman-tim', [FishermanTimController::class, 'index']);
     Route::post('fisherman-tim', [FishermanTimController::class, 'store']);
     Route::get('fisherman-tim/{id}', [FishermanTimController::class, 'show']);
+    Route::get('fisherman-tim-count', [FishermanTimController::class, 'count']);
     Route::put('fisherman-tim/{id}', [FishermanTimController::class, 'update']);
     Route::delete('fisherman-tim/{id}', [FishermanTimController::class, 'destroy']);
     Route::get('fisherman-tim-province', [FishermanTimController::class, 'getFishermanTimByProvince']);
@@ -143,6 +203,7 @@ Route::group([
     // Fisherman Catch
     Route::get('fisherman-catch', [FishermanCatchController::class, 'index']);
     Route::post('fisherman-catch', [FishermanCatchController::class, 'store']);
+    Route::get('fisherman-catch/total', [FishermanCatchController::class, 'count']);
     Route::get('fisherman-catch/{id}', [FishermanCatchController::class, 'show']);
     Route::put('fisherman-catch/{id}', [FishermanCatchController::class, 'update']);
     Route::delete('fisherman-catch/{id}', [FishermanCatchController::class, 'destroy']);
