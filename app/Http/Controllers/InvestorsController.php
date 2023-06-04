@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Investors;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 
 class InvestorsController extends Controller
@@ -15,17 +16,36 @@ class InvestorsController extends Controller
     // }
     public function __construct()
     {
-        Config::set('auth.defaults.guard','subadmin-api');
+        Config::set('auth.defaults.guard', 'subadmin-api');
     }
-    public function login(Request $request){
+    public function login(Request $request)
+    {
         $validator = Validator::make($request->all(), [
             'email' => 'required',
             'password' => 'required|string|min:8',
         ]);
-        if($validator->fails()) {
+        if ($validator->fails()) {
             return response()->json($validator->erros(), 422);
         }
-        if(! $token = auth()->attempt($validator->validated())) {
+        
+        $email = $request->email;
+        $password = $request->password;
+        $investor = Investors::where('email', $email)->first();
+        
+        if (!$investor) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Invalid email or password'
+            ], 401);
+        }
+        if (!Hash::check($password, $investor->password)) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Invalid email or password'
+            ], 401);
+        }
+
+        if (!$token = auth()->attempt($validator->validated())) {
             return response()->json(['error' => 'Unauthorized'], 401);
         }
         return $this->createNewToken($token);
@@ -36,7 +56,8 @@ class InvestorsController extends Controller
      * 
      * @return \Illuminate\Http\JsonResponse
      */
-    public function register(Request $request) {
+    public function register(Request $request)
+    {
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|between:2,100',
             'phone' => 'required|string|max:12',
@@ -53,22 +74,23 @@ class InvestorsController extends Controller
             'register_date' => 'required',
             'balance' => 'required'
         ]);
-        if($validator->fails()) {
+        if ($validator->fails()) {
             return response()->json($validator->errors()->toJson(), 400);
         }
         $user = Investors::create(array_merge(
-                    $validator->validated(),
-                    ['password' => bcrypt($request->password)]
-                ));
+            $validator->validated(),
+            ['password' => bcrypt($request->password)]
+        ));
         return response()->json([
             'message' => 'Investors successfully registered',
             'user' => $user
         ], 201);
     }
 
-    
 
-    public function userProfile(){
+
+    public function userProfile()
+    {
         return response()->json(auth()->user());
     }
 
@@ -79,7 +101,8 @@ class InvestorsController extends Controller
      * 
      * @return \Illuminate\Http\JsonResponse
      */
-    protected function createNewToken($token){
+    protected function createNewToken($token)
+    {
         return response()->json([
             'access_token' => $token,
             'token_type' => 'bearer',
@@ -88,12 +111,14 @@ class InvestorsController extends Controller
         ]);
     }
 
-    public function logout() {
+    public function logout()
+    {
         auth()->logout();
         return response()->json(['message' => ' Investors successfully signed out']);
     }
 
-    public function count(){
+    public function count()
+    {
         $total = Investors::all()->count();
         return response()->json([
             'status' => 'success',
