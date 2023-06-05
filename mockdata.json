@@ -1,0 +1,21 @@
+{
+    "fisherman_team_name": "Nelayan Lautan API",
+    "location": "Samarinda, Kalimantan Timur",
+    "business_value": 3222333444,
+    "collected_funds": 100000000,
+    "expected_funds": 250000000,
+    "percentage": 40,
+    "fisherman_count": 10,
+    "investor_count": 20,
+    "statistic": {
+        "market_cap": 1000000000,
+        "assets_total": 1000000000,
+        "divident_yield": 0.1,
+        "debt_to_equity": 0.5
+    },
+    "fisherman_catch": {
+        "total_weight": 10,
+        "income": 10000000,
+        "expenditure": 5000000
+    }
+}

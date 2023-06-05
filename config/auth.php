@@ -44,6 +44,10 @@ return [
             'driver' => 'jwt',
             'provider' => 'users',
         ],
+        'api_investors' => [
+            'driver' => 'jwt',
+            'provider' => 'investors',
+        ],
         'admin-api' => [
             'driver' => 'jwt',
             'provider' => 'admin',
@@ -84,7 +88,7 @@ return [
             'model' => App\Models\Admin::class,
         ],
 
-        'subadmin' => [
+        'investors' => [
             'driver' => 'eloquent',
             'model' => App\Models\Investors::class,
         ],
