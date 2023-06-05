@@ -20,6 +20,16 @@ class InvestorsController extends Controller
     }
     public function login(Request $request)
     {
+        $email = $request->email;
+        $password = $request->password;
+        // jika kosong maka akan mengembalikan pesan error
+        if (!$email || !$password) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Please enter email or password'
+            ], 401);
+        }
+
         $validator = Validator::make($request->all(), [
             'email' => 'required',
             'password' => 'required|string|min:8',
@@ -28,8 +38,6 @@ class InvestorsController extends Controller
             return response()->json($validator->erros(), 422);
         }
         
-        $email = $request->email;
-        $password = $request->password;
         $investor = Investors::where('email', $email)->first();
         
         if (!$investor) {
@@ -104,6 +112,7 @@ class InvestorsController extends Controller
     protected function createNewToken($token)
     {
         return response()->json([
+            'success' => true,
             'access_token' => $token,
             'token_type' => 'bearer',
             'expires_in' => strtotime(date('Y-m-d H:i:s', strtotime("+60min"))),
