@@ -30,6 +30,7 @@ class FishermanController extends Controller
                 'email' => $fisherman->email,
                 'team_id' => $fisherman->tim_id,
                 'team_name' => $fisherman->fisherman_team->name,
+                'location_id' => $fisherman->location_id,
                 'location' => $location,
                 'city' => $fisherman->location->kota_kab_name,
                 'kecamatan' => $fisherman->location->kecamatan_name,
