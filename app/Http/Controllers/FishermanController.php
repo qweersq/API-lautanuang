@@ -15,10 +15,41 @@ class FishermanController extends Controller
 
     public function index()
     {
-        $fisherman = Fisherman::all();
+        $fishermans = Fisherman::all();
+
+        $data = [];
+
+        foreach ($fishermans as $fisherman) {
+
+            $location = $fisherman->location->kelurahan_des_name . ', ' . $fisherman->location->kecamatan_name . ', ' . $fisherman->location->kota_kab_name . ', ' . $fisherman->location->province_name;
+
+            $fishermanData = [
+                'id' => $fisherman->id,
+                'name' => $fisherman->name,
+                'phone' => $fisherman->phone,
+                'email' => $fisherman->email,
+                'team_id' => $fisherman->tim_id,
+                'team_name' => $fisherman->fisherman_team->name,
+                'location' => $location,
+                'city' => $fisherman->location->kota_kab_name,
+                'kecamatan' => $fisherman->location->kecamatan_name,
+                'kelurahan' => $fisherman->location->kelurahan_des_name,
+                'province' => $fisherman->location->province_name,
+                'gender' => $fisherman->gender,
+                'birth_date' => $fisherman->birth_date,
+                'status' => $fisherman->status,
+                'experience' => $fisherman->experience,
+                'nik' => $fisherman->nik,
+                'image' => $fisherman->image,
+                'identity_photo' => $fisherman->identity_photo,
+            ];
+
+            $data[] = $fishermanData;
+        }
+
         return response()->json([
             'status' => 'success',
-            'data' => $fisherman
+            'data' => $data
         ]);
     }
 
@@ -59,9 +90,36 @@ class FishermanController extends Controller
             ], 404);
         }
 
+        $location = $fisherman->location->kelurahan_des_name . ', ' . $fisherman->location->kecamatan_name . ', ' . $fisherman->location->kota_kab_name . ', ' . $fisherman->location->province_name;
+
+        $fishermanData = [
+            'id' => $fisherman->id,
+            'name' => $fisherman->name,
+            'phone' => $fisherman->phone,
+            'email' => $fisherman->email,
+            'team_id' => $fisherman->tim_id,
+            'team_name' => $fisherman->fisherman_team->name,
+            'location' => $location,
+            'city' => $fisherman->location->kota_kab_name,
+            'kecamatan' => $fisherman->location->kecamatan_name,
+            'kelurahan' => $fisherman->location->kelurahan_des_name,
+            'province' => $fisherman->location->province_name,
+            'gender' => $fisherman->gender,
+            'birth_date' => $fisherman->birth_date,
+            'status' => $fisherman->status,
+            'experience' => $fisherman->experience,
+            'nik' => $fisherman->nik,
+            'image' => $fisherman->image,
+            'identity_photo' => $fisherman->identity_photo,
+            'location_data' => $fisherman->location,
+            'team_data' => $fisherman->fisherman_team,
+        ];
+
+        $data[] = $fishermanData;
+
         return response()->json([
             'status' => 'success',
-            'data' => $fisherman
+            'data' => $data
         ]);
     }
 
@@ -102,7 +160,8 @@ class FishermanController extends Controller
         ]);
     }
 
-    public function count(){
+    public function count()
+    {
         $total = Fisherman::all()->count();
         return response()->json([
             'status' => 'success',
@@ -110,12 +169,13 @@ class FishermanController extends Controller
         ]);
     }
 
-    public function getALLDataFishermanByFishermanTim(Request $request){
+    public function getALLDataFishermanByFishermanTim(Request $request)
+    {
         $validator = Validator::make($request->all(), [
             'tim_id' => 'required|integer'
         ]);
-         // Ambil location_id dari inputan
-         if ($validator->fails()) {
+        // Ambil location_id dari inputan
+        if ($validator->fails()) {
             return response()->json([
                 'status' => 'error',
                 'message' => $validator->errors(),
@@ -126,7 +186,7 @@ class FishermanController extends Controller
 
         // Query untuk mendapatkan tim nelayan berdasarkan location_id
         $dataNelayan = Fisherman::where('tim_id', $tim_id)->get();
-    
+
         // Mengecek apakah terdapat tim nelayan yang ditemukan
         if ($dataNelayan->isEmpty()) {
             return response()->json([
@@ -134,7 +194,7 @@ class FishermanController extends Controller
                 'message' => 'Tidak ada tim nelayan yang ditemukan untuk tim id ' . $tim_id,
             ]);
         }
-    
+
         return response()->json([
             'status' => 'success',
             'data' => $dataNelayan
@@ -142,7 +202,8 @@ class FishermanController extends Controller
     }
 
 
-    public function getTotalActiveFishermanByStatus() {
+    public function getTotalActiveFishermanByStatus()
+    {
         // Query untuk mendapatkan tim nelayan berdasarkan location_id
         $dataNelayan = Fisherman::where('status', 'aktif')->get();
         $total = $dataNelayan->count();

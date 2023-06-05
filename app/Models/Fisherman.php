@@ -30,4 +30,14 @@ class Fisherman extends Model
     protected $casts = [
         'birth_date' => 'date',
     ];
+
+    public function location()
+    {
+        return $this->belongsTo(Location::class);
+    }
+
+    public function fisherman_team()
+    {
+        return $this->belongsTo(FishermanTim::class, 'tim_id');
+    }
 }
