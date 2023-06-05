@@ -31,4 +31,9 @@ class FishermanTim extends Model
     {
         return $this->belongsTo(Location::class);
     }
+
+    public function fisherman()
+    {
+        return $this->hasMany(Fisherman::class, 'tim_id');
+    }
 }
