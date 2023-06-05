@@ -2,7 +2,6 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Models\Fisherman;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BankController;
 use App\Http\Controllers\AdminController;
@@ -22,6 +21,9 @@ use App\Http\Controllers\OperationalCostController;
 use App\Http\Controllers\FishermanCatchDetailController;
 use App\Http\Controllers\OperationalCostDetailController;
 use App\Http\Controllers\CategoryOperationalCostController;
+
+// api mobile
+use App\Http\Controllers\Mobile\MFishermanTeamController;
 
 /*
 |--------------------------------------------------------------------------
@@ -64,13 +66,6 @@ Route::group([
 //     Route::post('refresh', [InvestorsController::class, 'refresh']);
 //     Route::post('me', [InvestorsController::class, 'me']);
 // });
-Route::group([
-    'prefix' => 'investor'
-
-], function($router){
-    Route::post('/login', [InvestorsController::class, 'login']);
-    Route::post('/register', [InvestorsController::class, 'register']);
-});
 
 Route::group([
     'middleware' => ['jwt.role:subadmin', 'jwt.auth'],
@@ -291,6 +286,25 @@ Route::group([
     Route::get('bank-account/{id}', [BankAccountController::class, 'show']);
     Route::put('bank-account/{id}', [BankAccountController::class, 'update']);
     Route::delete('bank-account/{id}', [BankAccountController::class, 'destroy']);
+});
+
+
+// MOBILE API
+Route::group([
+    'prefix' => 'investor'
+
+], function($router){
+    Route::post('/login', [InvestorsController::class, 'login']);
+    Route::post('/register', [InvestorsController::class, 'register']);
+});
+
+Route::group([
+    'middleware' => ['api', 'auth.investor'],
+    'prefix' => 'mobile'
+
+], function ($router) {
+    // Fisherman
+    Route::get('fisherman', [MFishermanTeamController::class, 'index']);
 });
 
 
