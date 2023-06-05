@@ -304,8 +304,8 @@ Route::group([
 
 ], function ($router) {
     // Fisherman
-    Route::get('fisherman', [MFishermanTeamController::class, 'index']);
-    Route::get('fisherman/{id}', [MFishermanTeamController::class, 'getById']);
+    Route::get('fisherman-tim', [MFishermanTeamController::class, 'index']);
+    Route::get('fisherman-tim/{id}', [MFishermanTeamController::class, 'getById']);
 });
 
 
