@@ -21,7 +21,7 @@ use App\Http\Controllers\OperationalCostController;
 use App\Http\Controllers\FishermanCatchDetailController;
 use App\Http\Controllers\OperationalCostDetailController;
 use App\Http\Controllers\CategoryOperationalCostController;
-
+use App\Http\Controllers\FundingTransactionController;
 // api mobile
 use App\Http\Controllers\Mobile\MFishermanTeamController;
 
@@ -288,6 +288,17 @@ Route::group([
     Route::delete('bank-account/{id}', [BankAccountController::class, 'destroy']);
 });
 
+Route::group([
+    'middleware' => ['api', 'jwt.auth'],
+
+], function ($router) {
+    // funding Transaction
+    Route::get('funding-transaction', [FundingTransactionController::class, 'index']);
+    Route::post('funding-transaction', [FundingTransactionController::class, 'store']);
+    Route::get('funding-transaction/{id}', [FundingTransactionController::class, 'show']);
+    Route::put('funding-transaction/{id}', [FundingTransactionController::class, 'update']);
+    Route::delete('funding-transaction/{id}', [FundingTransactionController::class, 'destroy']);
+});
 
 // MOBILE API
 Route::group([
