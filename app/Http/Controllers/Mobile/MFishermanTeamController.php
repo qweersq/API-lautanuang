@@ -6,8 +6,6 @@ use App\Http\Controllers\Controller;
 use App\Models\FishermanTim;
 use App\Models\FishermanCatch;
 use App\Models\FishermanCatchDetail;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
 
 class MFishermanTeamController extends Controller
 {
@@ -31,6 +29,7 @@ class MFishermanTeamController extends Controller
             $expenditure = 5000000;
 
             $fishermanTeamData = [
+                'id' => $fishermanTeam->id, // tambahkan id
                 'fisherman_team_name' => $fishermanTeam->name,
                 'location' => $location,
                 'business_value' => $fishermanTeam->total_assets + $fishermanTeam->divident_yield + $fishermanTeam->debt_to_equity_ratio + $fishermanTeam->market_cap,
@@ -54,6 +53,54 @@ class MFishermanTeamController extends Controller
 
             $data[] = $fishermanTeamData;
         }
+
+        return response()->json($data);
+    }
+
+    public function getById($id) {
+        $fishermanTeam = FishermanTim::find($id);
+
+        if (!$fishermanTeam) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Data not found'
+            ], 404);
+        }
+
+        $totalWeight = FishermanCatch::where('fisherman_tim_id', $fishermanTeam->id)->sum('weight');
+        $income = FishermanCatchDetail::where('fishing_catch_id', function ($query) use ($fishermanTeam) {
+            $query->select('id')->from('fisherman_catch')->where('fisherman_tim_id', $fishermanTeam->id);
+        })->sum('price');
+
+        $location = $fishermanTeam->location->kota_kab_name . ', ' . $fishermanTeam->location->province_name ;
+
+        // Mendapatkan total pengeluaran dari tangkapan
+        $expenditure = 5000000;
+
+        $fishermanTeamData = [
+            'id' => $fishermanTeam->id, // tambahkan id
+            'fisherman_team_name' => $fishermanTeam->name,
+            'location' => $location,
+            'business_value' => $fishermanTeam->total_assets + $fishermanTeam->divident_yield + $fishermanTeam->debt_to_equity_ratio + $fishermanTeam->market_cap,
+            'collected_funds' => $fishermanTeam->balance,
+            'expected_funds' => $fishermanTeam->quantity * $fishermanTeam->total_assets,
+            'percentage' => ($fishermanTeam->balance / ($fishermanTeam->quantity * $fishermanTeam->total_assets)) * 100,
+            'fisherman_count' => 0,
+            'investor_count' => 0,
+            'statistic' => [
+                'market_cap' => $fishermanTeam->market_cap,
+                'assets_total' => $fishermanTeam->total_assets,
+                'divident_yield' => $fishermanTeam->divident_yield,
+                'debt_to_equity' => $fishermanTeam->debt_to_equity_ratio,
+            ],
+            'fisherman_catch' => [
+                'total_weight' => $totalWeight,
+                'income' => $income,
+                'expenditure' => $expenditure,
+            ],
+        ];
+
+        $data[] = $fishermanTeamData;
 
         return response()->json($data);
     }
