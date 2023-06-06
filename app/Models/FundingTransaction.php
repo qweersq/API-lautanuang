@@ -9,7 +9,7 @@ class FundingTransaction extends Model
 {
     use HasFactory;
 
-    protected $table = 'funcing_transaction';
+    protected $table = 'funding_transaction';
 
     protected $fillable = [
         'fisherman_tim_id',
