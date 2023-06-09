@@ -13,9 +13,19 @@ class FundingTransaction extends Model
 
     protected $fillable = [
         'fisherman_tim_id',
-        'investor_id',
+        'investors_id',
         'date',
         'quantity',
         'fund_amount',
     ];
+
+    public function investors()
+    {
+        return $this->belongsTo(Investors::class);
+    }
+
+    public function fisherman_tim()
+    {
+        return $this->belongsTo(FishermanTim::class);
+    }
 }
