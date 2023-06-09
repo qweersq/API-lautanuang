@@ -296,6 +296,7 @@ Route::group([
     Route::get('funding-transaction', [FundingTransactionController::class, 'index']);
     Route::post('funding-transaction', [FundingTransactionController::class, 'store']);
     Route::get('funding-transaction/{id}', [FundingTransactionController::class, 'show']);
+    Route::get('funding-transaction-count', [FundingTransactionController::class, 'count']);
     Route::put('funding-transaction/{id}', [FundingTransactionController::class, 'update']);
     Route::delete('funding-transaction/{id}', [FundingTransactionController::class, 'destroy']);
 });

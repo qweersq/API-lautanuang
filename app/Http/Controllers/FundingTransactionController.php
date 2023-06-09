@@ -101,6 +101,15 @@ class FundingTransactionController extends Controller
         ]);
     }
 
+    public function count()
+    {
+        $total = FundingTransaction::all()->count();
+        return response()->json([
+            'status' => 'success',
+            'total transaction' => $total
+        ]);
+    }
+
     /**
      * Remove the specified resource from storage.
      *
