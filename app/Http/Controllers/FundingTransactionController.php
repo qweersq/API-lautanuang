@@ -16,9 +16,27 @@ class FundingTransactionController extends Controller
     public function index()
     {
         $fundingTransaction = FundingTransaction::all();
+       
+        $transactionData = [];
+
+        foreach ($fundingTransaction as $ft) {
+            $data = [
+                'transaction_id' => $ft->id,
+                'fisherman_tim_id' => $ft->fisherman_tim_id,
+                'investors_id' => $ft->investors_id,
+                'fisherman_tim_name' => $ft->fisherman_tim->name, 
+                'investors_name' => $ft->investors->name,
+                'date' => $ft->date,
+                'quantity' => $ft->quantity,
+                'fund_amount' => $ft->fund_amount,
+                'status' => "Success",
+            ];
+            $transactionData[] = $data;
+        }
+
         return response()->json([
             'status' => 'success',
-            'data' => $fundingTransaction
+            'data' => $transactionData
         ]);
     }
 
@@ -62,10 +80,23 @@ class FundingTransactionController extends Controller
             ], 404);
         }
 
+        $data = [
+            'transaction_id' => $fundingTransaction->id,
+            'fisherman_tim_id' => $fundingTransaction->fisherman_tim_id,
+            'investors_id' => $fundingTransaction->investors_id,
+            'fisherman_tim_name' => $fundingTransaction->fisherman_tim->name, 
+            'investors_name' => $fundingTransaction->investors->name,
+            'date' => $fundingTransaction->date,
+            'quantity' => $fundingTransaction->quantity,
+            'fund_amount' => $fundingTransaction->fund_amount,
+            'status' => "Success",
+        ];
+
         return response()->json([
             'status' => 'success',
-            'data' => $fundingTransaction
+            'data' => $data
         ]);
+
     }
 
     /**

@@ -35,7 +35,7 @@ class MFishermanTeamController extends Controller
                 'business_value' => $fishermanTeam->total_assets + $fishermanTeam->divident_yield + $fishermanTeam->debt_to_equity_ratio + $fishermanTeam->market_cap,
                 'collected_funds' => $fishermanTeam->balance,
                 'expected_funds' => $fishermanTeam->quantity * $fishermanTeam->total_assets,
-                'percentage' => ($fishermanTeam->balance / ($fishermanTeam->quantity * $fishermanTeam->total_assets)) * 100,
+                'percentage' => ($fishermanTeam->balance / (9 * $fishermanTeam->total_assets)) * 100,
                 'fisherman_count' => 0,
                 'investor_count' => 0,
                 'statistic' => [

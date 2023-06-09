@@ -36,4 +36,5 @@ class FishermanTim extends Model
     {
         return $this->hasMany(Fisherman::class, 'tim_id');
     }
+
 }

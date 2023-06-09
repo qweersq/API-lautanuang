@@ -68,12 +68,26 @@ class FishermanController extends Controller
             'status' => 'required|in:aktif,non-aktif',
             'experience' => 'required|integer',
             'nik' => 'required|unique:fisherman,nik|numeric',
-            'image' => 'required',
-            'identity_photo' => 'required',
+            'image' => 'required|image|max:2048', // Validasi foto 'image'
+            'identity_photo' => 'required|image|max:2048', // Validasi foto 'identity_photo'
         ]);
 
-        $fisherman = Fisherman::create($validatedData);
-        $fisherman->save();
+        // Upload foto 'image'
+        $image = $request->file('image');
+        $imageName = time() . '.' . $image->getClientOriginalExtension();
+        $image->move(public_path('images'), $imageName);
+
+        // Upload foto 'identity_photo'
+        $identityPhoto = $request->file('identity_photo');
+        $identityPhotoName = time() . '_identity.' . $identityPhoto->getClientOriginalExtension();
+        $identityPhoto->move(public_path('images'), $identityPhotoName);
+
+        // Simpan data nelayan beserta informasi foto ke database
+        $data = $validatedData;
+        $data['image'] = $imageName;
+        $data['identity_photo'] = $identityPhotoName;
+
+        $fisherman = Fisherman::create($data);
 
         return response()->json([
             'status' => 'success',
