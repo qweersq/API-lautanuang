@@ -2,8 +2,9 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\FishermanTim;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class FishermanCatch extends Model
 {
@@ -18,5 +19,10 @@ class FishermanCatch extends Model
     public function fishermanCatchDetails()
     {
         return $this->hasMany(FishermanCatchDetail::class, 'fishing_catch_id', 'id');
+    }
+
+    public function fishermanTim()
+    {
+        return $this->belongsTo(FishermanTim::class);
     }
 }

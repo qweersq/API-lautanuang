@@ -301,6 +301,7 @@ Route::group([
     Route::get('funding-transaction/{id}', [FundingTransactionController::class, 'show']);
     Route::get('funding-transaction-timID', [FundingTransactionController::class, 'getFundingTransactionByFishermanTimId']);
     Route::get('funding-transaction-count', [FundingTransactionController::class, 'count']);
+    Route::get('funding-transaction-TopTimInvest', [FundingTransactionController::class, 'getMostInvestFishermanTim']);
     Route::put('funding-transaction/{id}', [FundingTransactionController::class, 'update']);
     Route::delete('funding-transaction/{id}', [FundingTransactionController::class, 'destroy']);
 });

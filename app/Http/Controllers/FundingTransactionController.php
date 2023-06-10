@@ -141,6 +141,26 @@ class FundingTransactionController extends Controller
         ]);
     }
 
+    public function getMostInvestFishermanTim()
+    {
+        $total = FundingTransaction::select('fisherman_tim_id', FundingTransaction::raw('SUM(fund_amount) AS total_invest'))->groupBy('fisherman_tim_id')->orderByDesc('total_invest')->limit(5)->get();
+
+        foreach ($total as $transaction) {
+            $transactionData = [
+                'fisherman_tim_id' => $transaction->fisherman_tim->id,
+                'name' => $transaction->fisherman_tim->name,
+                'total_invest' => $transaction->total_invest
+            ];
+
+            $data[] = $transactionData;
+
+        }
+        return response()->json([
+            'status' => 'success',
+            'total transaction' => $data
+        ]);
+    }
+
     public function getFundingTransactionByFishermanTimId(Request $request){
         $validator = Validator::make($request->all(), [
             'fisherman_tim_id' => 'required|integer'

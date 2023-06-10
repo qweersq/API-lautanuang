@@ -2,9 +2,10 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
 use App\Models\Location;
+use App\Models\FishermanCatch;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 
 class FishermanTim extends Model
@@ -35,6 +36,11 @@ class FishermanTim extends Model
     public function fisherman()
     {
         return $this->hasMany(Fisherman::class, 'tim_id');
+    }
+
+    public function fishermanCatch()
+    {
+        return $this->hasMany(FishermanCatch::class, 'fisherman_tim_id');
     }
 
 }

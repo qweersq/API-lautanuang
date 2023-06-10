@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\FishermanCatch;
+use App\Models\FishermanTim;
 use Illuminate\Http\Request;
 
 class FishermanCatchController extends Controller
@@ -82,11 +83,19 @@ class FishermanCatchController extends Controller
     }
 
     public function fishermanTeamMostCatchByWeight(){
-        $fishermancatch = FishermanCatch::select('fisherman_tim_id', FishermanCatch::raw('SUM(weight) as total_tangkapan'))->groupBy('fisherman_tim_id')-> orderByDesc('total_tangkapan')->limit(5)->get();
+        $fishermancatch = FishermanCatch::select('fisherman_tim_id', FishermanCatch::raw('SUM(weight) AS total_tangkapan'))->groupBy('fisherman_tim_id')-> orderByDesc('total_tangkapan')->limit(5)->get();
 
+        foreach ($fishermancatch as $mostCatch) {
+            $transactionData = [
+                'fisherman_tim_id' => $mostCatch->fisherman_tim_id,
+                'name' => $mostCatch->fishermanTim->name,
+                'total_tangkapan' => $mostCatch->total_tangkapan
+            ];
+            $list[] = $transactionData;
+        }
         return response()->json([
             'status' => 'success',
-            'data' => $fishermancatch
+            'data' => $list
         ]);
     }
 
