@@ -94,8 +94,8 @@ class MFishermanTeamController extends Controller
                 'debt_to_equity' => $fishermanTeam->debt_to_equity_ratio,
             ],
             'fisherman_catch' => [
-                'total_weight' => $totalWeight,
-                'income' => $income,
+                'total_weight' => (int)$totalWeight,
+                'income' => (int)$income,
                 'expenditure' => $expenditure,
             ],
         ];
