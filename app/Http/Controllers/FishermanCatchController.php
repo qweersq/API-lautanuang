@@ -81,6 +81,15 @@ class FishermanCatchController extends Controller
         ]);
     }
 
+    public function fishermanTeamMostCatchByWeight(){
+        $fishermancatch = FishermanCatch::select('fisherman_tim_id', FishermanCatch::raw('SUM(weight) as total_tangkapan'))->groupBy('fisherman_tim_id')-> orderByDesc('total_tangkapan')->limit(5)->get();
+
+        return response()->json([
+            'status' => 'success',
+            'data' => $fishermancatch
+        ]);
+    }
+
     // Menghapus data
     public function destroy($id)
     {

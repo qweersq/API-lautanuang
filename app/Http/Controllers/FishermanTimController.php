@@ -100,7 +100,7 @@ class FishermanTimController extends Controller
         $total = FishermanTim::all()->count();
         return response()->json([
             'status' => 'success',
-            'total data' => $total
+            'total fisherman tim' => $total
         ]);
     }
 

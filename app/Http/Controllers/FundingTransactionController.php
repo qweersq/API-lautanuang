@@ -141,6 +141,47 @@ class FundingTransactionController extends Controller
         ]);
     }
 
+    public function getFundingTransactionByFishermanTimId(Request $request){
+        $validator = Validator::make($request->all(), [
+            'fisherman_tim_id' => 'required|integer'
+        ]);
+        // Ambil fisherman_tim_id dari inputan
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => 'error',
+                'message' => $validator->errors(),
+            ], 400);
+        }
+
+        $fisherman_tim_id = $request->input('fisherman_tim_id');
+
+        $fundingTransaction = FundingTransaction::where('fisherman_tim_id', $fisherman_tim_id)->get();
+
+        if ($fundingTransaction->isEmpty()) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Tidak ada transaksi yang ditemukan untuk tim id ' . $fisherman_tim_id,
+            ]);
+        }
+
+        foreach ($fundingTransaction as $transaction) {
+            $fisherman_tim_id = $transaction->fisherman_tim->id;
+
+            $transactionData = [
+                'id' => $transaction->id,
+                'fisherman_tim_id' => $transaction->fisherman_tim->id,
+                'quantity' => $transaction->quantity
+            ];
+
+            $data[] = $transactionData;
+
+            return response()->json([
+                'status' => 'success',
+                'data' => $data
+            ]);
+        }
+    }
+
     /**
      * Remove the specified resource from storage.
      *

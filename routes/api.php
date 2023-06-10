@@ -24,6 +24,7 @@ use App\Http\Controllers\CategoryOperationalCostController;
 use App\Http\Controllers\FundingTransactionController;
 // api mobile
 use App\Http\Controllers\Mobile\MFishermanTeamController;
+use App\Models\Fisherman;
 
 /*
 |--------------------------------------------------------------------------
@@ -199,6 +200,7 @@ Route::group([
     Route::get('fisherman-catch', [FishermanCatchController::class, 'index']);
     Route::post('fisherman-catch', [FishermanCatchController::class, 'store']);
     Route::get('fisherman-catch/total', [FishermanCatchController::class, 'count']);
+    Route::get('fisherman-catch-most', [FishermanCatchController::class, 'fishermanTeamMostCatchByWeight']);
     Route::get('fisherman-catch/{id}', [FishermanCatchController::class, 'show']);
     Route::put('fisherman-catch/{id}', [FishermanCatchController::class, 'update']);
     Route::delete('fisherman-catch/{id}', [FishermanCatchController::class, 'destroy']);
@@ -211,6 +213,7 @@ Route::group([
     // Fisherman Catch Detail
     Route::get('fisherman-catch-detail', [FishermanCatchDetailController::class, 'index']);
     Route::post('fisherman-catch-detail', [FishermanCatchDetailController::class, 'store']);
+    Route::get('fisherman-catch-detail-TopCatch', [FishermanCatchDetailController::class, 'getTop5MostCatchByWeight']);
     Route::get('fisherman-catch-detail/{id}', [FishermanCatchDetailController::class, 'show']);
     Route::put('fisherman-catch-detail/{id}', [FishermanCatchDetailController::class, 'update']);
     Route::delete('fisherman-catch-detail/{id}', [FishermanCatchDetailController::class, 'destroy']);
@@ -296,6 +299,7 @@ Route::group([
     Route::get('funding-transaction', [FundingTransactionController::class, 'index']);
     Route::post('funding-transaction', [FundingTransactionController::class, 'store']);
     Route::get('funding-transaction/{id}', [FundingTransactionController::class, 'show']);
+    Route::get('funding-transaction-timID', [FundingTransactionController::class, 'getFundingTransactionByFishermanTimId']);
     Route::get('funding-transaction-count', [FundingTransactionController::class, 'count']);
     Route::put('funding-transaction/{id}', [FundingTransactionController::class, 'update']);
     Route::delete('funding-transaction/{id}', [FundingTransactionController::class, 'destroy']);

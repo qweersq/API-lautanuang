@@ -15,4 +15,8 @@ class FishermanCatch extends Model
         'fisherman_tim_id',
         'weight'
     ];
+    public function fishermanCatchDetails()
+    {
+        return $this->hasMany(FishermanCatchDetail::class, 'fishing_catch_id', 'id');
+    }
 }

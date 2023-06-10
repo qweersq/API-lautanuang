@@ -40,7 +40,8 @@ class FishermanCatchDetailController extends Controller
             'name' => 'required',
             'animal_type_id' => 'required|integer',
             'fishing_catch_id' => 'required|integer',
-            'price' => 'required|integer'
+            'price' => 'required|integer',
+            'weight' => 'required|integer'
         ]);
 
         $fishermancatchDetail = FishermanCatchDetail::create($validatedData);
@@ -59,7 +60,8 @@ class FishermanCatchDetailController extends Controller
             'name' => 'sometimes|required',
             'animal_type_id' => 'sometimes|required|integer',
             'fishing_catch_id' => 'sometimes|required|integer',
-            'price' => 'sometimes|required|integer'
+            'price' => 'sometimes|required|integer',
+            'weight' => 'sometimes|required|integer'
         ]);
 
         $fishermancatchDetail = FishermanCatchDetail::find($id);
@@ -77,6 +79,16 @@ class FishermanCatchDetailController extends Controller
             'data' => $fishermancatchDetail
         ]);
     }
+
+    public function getTop5MostCatchByWeight(){
+        $fishermancatchDetail = FishermanCatchDetail::select('name', FishermanCatchDetail::raw('SUM(weight) AS total_weight'))->groupBy('name')->orderByDesc('total_weight')->limit(5)->get();
+       
+        return response()->json([
+            'status' => 'success',
+            'data' => $fishermancatchDetail
+        ]);
+    }
+
 
     // Menghapus data
     public function destroy($id)

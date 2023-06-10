@@ -15,6 +15,12 @@ class FishermanCatchDetail extends Model
         'name',
         'animal_type_id',
         'fishing_catch_id',
-        'price'
+        'price',
+        'weight'
     ];
+
+    public function fishermanCatch()
+    {
+        return $this->belongsTo(FishermanCatch::class, 'fishing_catch_id', 'id');
+    }
 }
