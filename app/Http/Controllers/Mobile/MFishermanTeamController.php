@@ -19,9 +19,7 @@ class MFishermanTeamController extends Controller
         foreach ($fishermanTeams as $fishermanTeam) {
             // Mendapatkan total berat tangkapan dan pendapatan dari tangkapan
             $totalWeight = (int)FishermanCatch::where('fisherman_tim_id', $fishermanTeam->id)->sum('weight');
-            $income = (int)FishermanCatchDetail::where('fishing_catch_id', function ($query) use ($fishermanTeam) {
-                $query->select('id')->from('fisherman_catch')->where('fisherman_tim_id', $fishermanTeam->id);
-            })->sum('price');
+            $income = 22000 * $totalWeight;
 
             $location = $fishermanTeam->location->kota_kab_name . ', ' . $fishermanTeam->location->province_name ;
 
@@ -68,7 +66,9 @@ class MFishermanTeamController extends Controller
         }
 
         $totalWeight = (int)FishermanCatch::where('fisherman_tim_id', $fishermanTeam->id)->sum('weight');
-        $income = 254000000;
+        $income = (int)FishermanCatchDetail::where('fishing_catch_id', function ($query) use ($fishermanTeam) {
+            $query->select('id')->from('fisherman_catch')->where('fisherman_tim_id', $fishermanTeam->id);
+        })->sum('price');
 
         $location = $fishermanTeam->location->kota_kab_name . ', ' . $fishermanTeam->location->province_name ;
 
